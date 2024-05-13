@@ -1,0 +1,276 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     10841,        268]
+NotebookOptionsPosition[      9829,        242]
+NotebookOutlinePosition[     10227,        258]
+CellTagsIndexPosition[     10184,        255]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Strong E-embeddings and total refinements of the Bruhat Order\
+\>", "Title",
+ CellChangeTimes->{{3.9039479909990273`*^9, 
+  3.903948024887767*^9}},ExpressionUUID->"ceee15dc-5a29-4de3-acef-\
+341e2844075b"],
+
+Cell["README", "Subtitle",
+ CellChangeTimes->{{3.903948280414598*^9, 
+  3.9039483007944927`*^9}},ExpressionUUID->"c8a24271-2a4a-4e69-9be5-\
+83cc3da5bbb0"],
+
+Cell["\<\
+The code in this notebook is that used to make the Diagrams in the paper \
+titled \[OpenCurlyDoubleQuote]Strong E-embeddings and total refinements of \
+the Bruhat Order\[CloseCurlyDoubleQuote]. It\[CloseCurlyQuote]s split up into \
+some configurable settings, some auxiliary code, some examples and then a \
+section for the user to interact with.
+ \
+\>", "Text",
+ CellChangeTimes->{{3.903948307916428*^9, 
+  3.90394846279783*^9}},ExpressionUUID->"0027fe87-7d2c-4aac-a5c0-\
+8a38a864b3c6"],
+
+Cell[CellGroupData[{
+
+Cell["Configurable Settings", "Subtitle",
+ CellChangeTimes->{{3.903948057168898*^9, 
+  3.9039480666561003`*^9}},ExpressionUUID->"2fb7f2c8-2e53-46a2-8287-\
+8ff73e994f77"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", "\n", 
+   RowBox[{
+   "Configure", " ", "the", " ", "following", " ", "settings", " ", "to", " ",
+     "your", " ", 
+    RowBox[{"tastes", "."}]}], " ", "\n", "*)"}], "\n", 
+  RowBox[{"defaultColours", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+    "Red", ",", " ", "Green", ",", " ", "Blue", ",", " ", "Cyan", ",", " ", 
+     "Purple", ",", " ", "Black", ",", " ", "Gray", ",", " ", 
+     RowBox[{"Darker", "[", "Yellow", "]"}]}], "}"}]}]}]], "Code",
+ CellChangeTimes->{{3.903948078369705*^9, 3.903948207916039*^9}, {
+  3.903948631034577*^9, 
+  3.903948656749874*^9}},ExpressionUUID->"42f9e4ac-5025-42df-be58-\
+86ee7f0d8e0d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Auxiliary Code", "Subtitle",
+ CellChangeTimes->{{3.903948032606752*^9, 
+  3.903948041378109*^9}},ExpressionUUID->"b99a5c09-3485-415d-b39c-\
+3f1073700ab4"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", "\n", 
+   RowBox[{
+    RowBox[{
+    "Run", " ", "the", " ", "following", " ", "code", " ", "in", " ", "this", 
+     " ", "cell", " ", "so", " ", "that", " ", "you", " ", "run", " ", "your",
+      " ", "own", " ", "code", " ", 
+     RowBox[{"later", ":", "\n", 
+      RowBox[{
+      "1.", " ", "Click", " ", "in", " ", "this", " ", "grey", " ", 
+       "cell"}]}]}], ";", "\n", 
+    RowBox[{"2.", " ", 
+     RowBox[{"Press", " ", "[", 
+      RowBox[{"SHIFT", " ", "+", " ", "CMD", " ", "+", " ", "ENTER"}], "]"}], 
+     " ", "if", " ", "in", " ", "Mac", " ", 
+     RowBox[{"or", " ", "[", 
+      RowBox[{"CTRL", " ", "+", " ", "SHIFT", " ", "+", " ", "ENTER"}], "]"}],
+      " ", "if", " ", "on", " ", "Windows"}], ";"}], "\n", "*)"}], "\n", "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"makeCPRGraph", "[", 
+     RowBox[{"permutationGroup_", ",", " ", 
+      RowBox[{"colours_", ":", "defaultColours"}]}], "]"}], ":=", "\n", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "Makes", " ", "permutation", " ", "representation", " ", "graph", " ", 
+      "of", " ", "a", " ", "PermutationGroup", " ", "type"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"Module", "[", "\n", "\t", 
+     RowBox[{
+      RowBox[{"{", "\n", "\t\t", 
+       RowBox[{"graph", ",", "\n", "\t\t", 
+        RowBox[{"styleList", " ", "=", " ", 
+         RowBox[{"{", "}"}]}], ",", "\n", "\t\t", "permutationImage", ",", 
+        "\n", "\t\t", "edgesOfGen", ",", "\n", "\t\t", 
+        RowBox[{"vertexList", " ", "=", " ", 
+         RowBox[{"PermutationSupport", "[", "permutationGroup", "]"}]}], ",", 
+        "\n", "\t\t", 
+        RowBox[{"edgesByGen", " ", "=", " ", 
+         RowBox[{"{", "}"}]}], ",", "\n", "\t\t", 
+        RowBox[{"totalEdgeList", " ", "=", " ", 
+         RowBox[{"{", "}"}]}], ",", "\n", "\t\t", 
+        RowBox[{"groupGenerators", " ", "=", " ", 
+         RowBox[{"GroupGenerators", "[", "permutationGroup", "]"}]}]}], "\n", 
+       "\t", "}"}], ",", "\n", "\t", "\[IndentingNewLine]", "\t", 
+      RowBox[{
+       RowBox[{"Do", "[", "\n", "\t\t", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "The", " ", "image", " ", "of", " ", "the", " ", "permutation"}], 
+         " ", "*)"}], "\n", "\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"permutationImage", " ", "=", " ", 
+           RowBox[{"PermutationReplace", "[", 
+            RowBox[{"vertexList", ",", " ", "gen"}], "]"}]}], ";", "\n", 
+          "\t\t", 
+          RowBox[{"(*", " ", 
+           RowBox[{
+            RowBox[{
+            "Edges", " ", "of", " ", "the", " ", "graph", " ", "stored", " ", 
+             "as", " ", "pairs", " ", 
+             RowBox[{"{", 
+              RowBox[{"a", ",", " ", "b"}], "}"}], " ", "with", " ", "a"}], 
+            " ", "<", " ", 
+            RowBox[{"b", "."}]}], " ", "*)"}], "\n", "\t\t", 
+          RowBox[{"edgesOfGen", " ", "=", " ", 
+           RowBox[{"Select", "[", 
+            RowBox[{
+             RowBox[{"Table", "[", " ", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"i", ",", " ", 
+                 RowBox[{
+                 "permutationImage", "\[LeftDoubleBracket]", "i", 
+                  "\[RightDoubleBracket]"}]}], "}"}], ",", " ", 
+               RowBox[{"{", 
+                RowBox[{"i", ",", " ", "1", ",", " ", 
+                 RowBox[{"Length", "[", "permutationImage", "]"}]}], "}"}]}], 
+              "]"}], ",", " ", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+               "#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+               " ", "<", " ", 
+               RowBox[{
+               "#", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}], 
+              " ", "&"}]}], "]"}]}], ";", " ", "\[IndentingNewLine]", "\t\t", 
+          
+          RowBox[{"edgesByGen", " ", "=", " ", 
+           RowBox[{"Join", "[", 
+            RowBox[{"edgesByGen", ",", " ", 
+             RowBox[{"{", "edgesOfGen", "}"}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", "\t\t", 
+          RowBox[{"totalEdgeList", " ", "=", " ", 
+           RowBox[{"Sort", "[", 
+            RowBox[{"Join", "[", 
+             RowBox[{"totalEdgeList", ",", " ", "edgesByGen"}], "]"}], 
+            "]"}]}], ";"}], "\n", "\t", ",", 
+         RowBox[{"{", 
+          RowBox[{"gen", ",", "groupGenerators"}], "}"}]}], "]"}], ";", "\n", 
+       "\t", "\[IndentingNewLine]", "\t", 
+       RowBox[{"Do", "[", "\[IndentingNewLine]", "\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"styleList", " ", "=", " ", 
+           RowBox[{"Join", "[", 
+            RowBox[{"styleList", ",", 
+             RowBox[{
+             "colours", "\[LeftDoubleBracket]", "\n", "\t\t\t\t\t\t", 
+              RowBox[{"Select", "[", "\n", "\t\t\t\t\t\t\t", 
+               RowBox[{
+                RowBox[{"Table", "[", 
+                 RowBox[{"i", " ", ",", 
+                  RowBox[{"{", 
+                   RowBox[{"i", ",", "1", ",", 
+                    RowBox[{"Length", "[", "edgesByGen", "]"}]}], "}"}]}], 
+                 "]"}], ",", "\[IndentingNewLine]", "\t\t\t\t\t\t", 
+                RowBox[{
+                 RowBox[{"ContainsAny", "[", 
+                  RowBox[{
+                   RowBox[{
+                   "edgesByGen", "\[LeftDoubleBracket]", "#", 
+                    "\[RightDoubleBracket]"}], ",", 
+                   RowBox[{"{", "edge", "}"}]}], "]"}], "&"}]}], "]"}], "\n", 
+              "\t\t\t\t\t\t", "\[RightDoubleBracket]"}]}], "]"}]}], ";"}], 
+         "\[IndentingNewLine]", "\t", ",", 
+         RowBox[{"{", 
+          RowBox[{"edge", ",", 
+           RowBox[{"DeleteDuplicates", "[", "totalEdgeList", "]"}]}], "}"}]}],
+         "]"}], ";", "\n", "\t", "\[IndentingNewLine]", "\t", 
+       RowBox[{"graph", " ", "=", " ", 
+        RowBox[{"Graph", "[", "\n", "\t", 
+         RowBox[{"totalEdgeList", ",", " ", "\n", "\t", 
+          RowBox[{"EdgeShapeFunction", "\[Rule]", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"Arrowheads", "[", "0", "]"}], ",", " ", "Thick", ",", 
+               " ", 
+               RowBox[{"styleList", "\[LeftDoubleBracket]", 
+                RowBox[{"i", "++"}], "\[RightDoubleBracket]"}], ",", " ", 
+               RowBox[{"Arrow", " ", "@", "#"}]}], "}"}], "&"}], ")"}]}], ",",
+           "\n", "\t", 
+          RowBox[{"VertexStyle", "\[Rule]", " ", 
+           RowBox[{"{", 
+            RowBox[{"None", ",", "Black"}], "}"}]}], ",", "\n", "\t", 
+          RowBox[{"VertexLabels", "\[Rule]", "Automatic"}]}], "]"}]}]}]}], 
+     "\[IndentingNewLine]", "]"}]}], "\n"}]}]], "Code",
+ CellChangeTimes->{{3.903948231858508*^9, 3.903948272818907*^9}, {
+   3.903948472711145*^9, 3.9039487514600477`*^9}, {3.903948799717246*^9, 
+   3.9039488732374907`*^9}, {3.90394921342437*^9, 3.9039492573684473`*^9}, {
+   3.9039493000967617`*^9, 3.90394931837315*^9}, {3.903949363765414*^9, 
+   3.9039495555076447`*^9}, {3.90395069906676*^9, 3.9039507117976103`*^9}, {
+   3.9039507727045183`*^9, 3.9039509468786087`*^9}, 3.903951274260285*^9, {
+   3.903951647153686*^9, 3.9039519306407747`*^9}, {3.9039519653920527`*^9, 
+   3.903952003914514*^9}},ExpressionUUID->"170bb131-f1cd-475f-8464-\
+d6e2b6fb6504"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 694},
+WindowMargins->{{Automatic, 128}, {15, Automatic}},
+FrontEndVersion->"12.2 for Mac OS X x86 (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"8ad5fd6a-f847-4a45-98b6-40bc9ccb2993"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 214, 5, 160, "Title",ExpressionUUID->"ceee15dc-5a29-4de3-acef-341e2844075b"],
+Cell[797, 29, 154, 3, 53, "Subtitle",ExpressionUUID->"c8a24271-2a4a-4e69-9be5-83cc3da5bbb0"],
+Cell[954, 34, 497, 10, 104, "Text",ExpressionUUID->"0027fe87-7d2c-4aac-a5c0-8a38a864b3c6"],
+Cell[CellGroupData[{
+Cell[1476, 48, 169, 3, 53, "Subtitle",ExpressionUUID->"2fb7f2c8-2e53-46a2-8287-8ff73e994f77"],
+Cell[1648, 53, 674, 16, 110, "Code",ExpressionUUID->"42f9e4ac-5025-42df-be58-86ee7f0d8e0d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2359, 74, 160, 3, 53, "Subtitle",ExpressionUUID->"b99a5c09-3485-415d-b39c-3f1073700ab4"],
+Cell[2522, 79, 7279, 159, 870, "Code",ExpressionUUID->"170bb131-f1cd-475f-8464-d6e2b6fb6504"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
